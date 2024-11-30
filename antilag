@@ -40,3 +40,21 @@ workspace.DescendantAdded:Connect(function(child)
         end
     end)
 end)
+local players = cloneref(game:GetService("Players"))
+local function disableShadows(character)
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CastShadow = false
+        end
+    end
+end
+for _, player in ipairs(players:GetPlayers()) do
+    if player.Character then
+        disableShadows(player.Character)
+    end
+end
+players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        disableShadows(character)
+    end)
+end)
