@@ -1,5 +1,7 @@
 local cloneref = cloneref or function(o) return o end
-Lighting = cloneref(game:GetService("Lighting"))
+local Lighting = cloneref(game:GetService("Lighting"))
+local RunService = cloneref(game:GetService("RunService"))
+local Players = cloneref(game:GetService("Players"))
 local Terrain = workspace:FindFirstChildOfClass('Terrain')
 Terrain.WaterWaveSize = 0
 Terrain.WaterWaveSpeed = 0
@@ -37,10 +39,12 @@ workspace.DescendantAdded:Connect(function(child)
         elseif child:IsA('Smoke') or child:IsA('Fire') then
             RunService.Heartbeat:Wait()
             child:Destroy()
+        elseif child:IsA('BasePart') then
+            RunService.Heartbeat:Wait()
+            child.CastShadow = false
         end
     end)
 end)
-local players = cloneref(game:GetService("Players"))
 local function disableShadows(character)
     for _, part in ipairs(character:GetDescendants()) do
         if part:IsA("BasePart") then
@@ -48,12 +52,12 @@ local function disableShadows(character)
         end
     end
 end
-for _, player in ipairs(players:GetPlayers()) do
+for _, player in ipairs(Players:GetPlayers()) do
     if player.Character then
         disableShadows(player.Character)
     end
 end
-players.PlayerAdded:Connect(function(player)
+Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
         disableShadows(character)
     end)
