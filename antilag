@@ -11,16 +11,23 @@ Lighting.GlobalShadows = false
 Lighting.FogEnd = 9e9
 settings().Rendering.QualityLevel = 1
 for i,v in pairs(game:GetDescendants()) do
-    if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("BasePart") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
         v.Material = "Plastic"
         v.Reflectance = 0
-    elseif v:IsA("Decal") then
+    elseif v:IsA("Decal") or v:IsA("Texture") then
         v.Transparency = 1
+        v.Texture = ""
     elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
         v.Lifetime = NumberRange.new(0)
+        v.Enabled = false
     elseif v:IsA("Explosion") then
         v.BlastPressure = 1
         v.BlastRadius = 1
+        v.Enabled = false
+    elseif v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") or v:IsA("Smoke") or v:IsA("Explosion") or v:IsA("Sparkles") or v:IsA("Fire") then
+        v.Enabled = false
+    elseif v:IsA("Sky") then
+        v.Parent = nil
     end
 end
 for i,v in pairs(Lighting:GetDescendants()) do
