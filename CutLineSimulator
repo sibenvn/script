@@ -1,0 +1,31 @@
+local Gui = loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/script/refs/heads/main/theme/wizard"), true))()
+local Window = Gui:NewWindow("Cut Line Simulator")
+local GameSection = Window:NewSection("Game Options")
+local isAutoSkip = false
+local isAutoCheckout = false
+
+GameSection:CreateToggle("Auto Skip", function(state)
+    isAutoSkip = state
+    spawn(function()
+        while isAutoSkip do
+            local args = {
+                [1] = 1
+            }
+            game:GetService("ReplicatedStorage").Engine.RemotesEvents.Skip:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end)
+
+GameSection:CreateToggle("Auto Checkout", function(state)
+    isAutoCheckout = state
+    spawn(function()
+        while isAutoCheckout do
+            local args = {
+                [1] = 1
+            }
+            game:GetService("ReplicatedStorage").Engine.RemotesEvents.Checkout:FireServer(unpack(args))
+            wait(0.3)
+        end
+    end)
+end)
