@@ -104,14 +104,19 @@ UGCSection:CreateButton("Tween Create", function()
     alert("Copied! On your clipboard")
 end)
 
+local isHidePlayer = false
 UGCSection:CreateButton("Hide Player", function()
-    while true do
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player ~= game.Players.LocalPlayer and player.Character then
-                player.Character:Destroy()
+    if isHidePlayer == false then
+        isHidePlayer = true
+        while true do
+            for _, player in pairs(game.Players:GetPlayers()) do
+                if player ~= game.Players.LocalPlayer and player.Character then
+                    player.Character:Destroy()
+                end
             end
+            wait(5)
         end
-        wait(5)
+        alert("Hide Player")
     end
 end)
 
@@ -133,6 +138,7 @@ FiringSection:CreateButton("Touchinterests", function()
             end
         end
     end)
+    alert("Touchinterests")
 end)
 
 FiringSection:CreateButton("Clickedetector", function()
@@ -144,7 +150,8 @@ FiringSection:CreateButton("Clickedetector", function()
                 end)
             end
         end
-    end) 
+    end)
+    alert("Clickedetector")
 end)
 
 FiringSection:CreateButton("ProximityPrompt", function()
@@ -154,7 +161,8 @@ FiringSection:CreateButton("ProximityPrompt", function()
                fireproximityprompt(pro)
             end
         end
-    end) 
+    end)
+    alert("ProximityPrompt")
 end)
 
 --[[ Player Section ]]--
