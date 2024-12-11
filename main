@@ -1,1 +1,38 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/sibenvn/script/refs/heads/main/menu"))()
+local hash = "{{hash}}"
+local gui = loadstring(game:HttpGet(("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"), true))()
+local noclip = loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/script/" .. hash .. "/noclip"), true))()
+local fly = loadstring(game:HttpGet(("https://sv.snaptik.vn/script/fly.lua"), true))()
+local window = gui:NewWindow("👾 MENU SIBEN 👾")
+local section = window:NewSection("Options")
+local cloneref = cloneref or function(o) return o end
+local function alert(text)
+    StarterGui:SetCore("SendNotification", {
+        Title = "Thông báo",
+        Text = text,
+        Duration = 2
+    })
+end
+
+section:CreateTextbox("{{hash}}", function(text)
+    print(text)
+end)
+
+section:CreateButton("excute", function()
+
+end)
+
+section:CreateToggle("fly", function(state)
+    if state then
+        fly.On()
+    else
+        fly.Off()
+    end
+end)
+
+section:CreateToggle("noclip", function(state)
+    if state then
+        noclip.On()
+    else
+        noclip.Off()
+    end
+end)
