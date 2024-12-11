@@ -1,38 +1,106 @@
 local hash = "{{hash}}"
-local gui = loadstring(game:HttpGet(("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"), true))()
-local noclip = loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/script/" .. hash .. "/noclip"), true))()
-local fly = loadstring(game:HttpGet(("https://sv.snaptik.vn/script/fly.lua"), true))()
+local gui = loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/script/refs/heads/main/theme/wizard"), true))()
 local window = gui:NewWindow("👾 MENU SIBEN 👾")
 local section = window:NewSection("Options")
 local cloneref = cloneref or function(o) return o end
-local function alert(text)
-    StarterGui:SetCore("SendNotification", {
-        Title = "Thông báo",
-        Text = text,
-        Duration = 2
-    })
-end
+
+--[[ Defined ]]--
+local RunService = cloneref(game:GetService("RunService"))
+local StarterGui = cloneref(game:GetService("StarterGui"))
+
+--[[ Notification ]]--
+local function alert(t) StarterGui:SetCore("SendNotification", { Title = "Thông báo", Text = t, Duration = 2 }) end
 
 section:CreateTextbox("{{hash}}", function(text)
     print(text)
+    -- loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/script/" .. hash .. "/components/noclip"), true))()
 end)
 
 section:CreateButton("excute", function()
 
 end)
 
+--[[ Fly ]]--
+local fly = nil
+local isFlying = false
+local bv, bg
+
 section:CreateToggle("fly", function(state)
     if state then
-        fly.On()
+        if game.Players.LocalPlayer.Character ~= nil then
+            isFlying = true
+            local player = game.Players.LocalPlayer
+            local controlModule = require(player:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+            local character = player.Character or player.CharacterAdded:Wait()
+            local rootPart = character:WaitForChild("HumanoidRootPart")
+            local humanoid = character:WaitForChild("Humanoid")
+            humanoid.PlatformStand = true -- Đặt nhân vật vào chế độ bay
+            bv = Instance.new("BodyVelocity", rootPart)
+            bv.MaxForce = Vector3.new(100000, 100000, 100000)
+            bg = Instance.new("BodyGyro", rootPart)
+            bg.MaxTorque = Vector3.new(100000, 100000, 100000)
+            fly = RunService.RenderStepped:Connect(function()
+                if isFlying == true and game.Players.LocalPlayer.Character ~= nil then
+                    camera = workspace.CurrentCamera
+                    bg.CFrame = workspace.CurrentCamera.CFrame
+                    local direction = controlModule:GetMoveVector()
+                    if direction.Magnitude > 0 then
+                        if direction.X > 0 then
+                            bv.Velocity = bv.Velocity + (camera.CFrame.RightVector * direction.X * 1)
+                        end
+                        if direction.X < 0 then
+                            bv.Velocity = bv.Velocity + (camera.CFrame.RightVector * direction.X * 1)
+                        end
+                        if direction.Z > 0 then
+                            bv.Velocity = bv.Velocity - (camera.CFrame.LookVector * direction.Z * 1)
+                        end
+                        if direction.Z < 0 then
+                            bv.Velocity = bv.Velocity - (camera.CFrame.LookVector * direction.Z * 1)
+                        end
+                    else
+                        bv.Velocity = camera.CFrame.LookVector * 0
+                    end
+                else
+                    humanoid.PlatformStand = false
+                    if bv and bg then
+                        bv:Destroy()
+                        bg:Destroy()
+                    end
+                    if fly then fly:Disconnect() end
+                    isFlying = false
+                end
+            end)
+        end
     else
-        fly.Off()
+        isFlying = false
     end
 end)
 
+--[[ NoClip ]]--
+local noclip = nil
+
 section:CreateToggle("noclip", function(state)
     if state then
-        noclip.On()
+        noclip = RunService.Stepped:Connect(function()
+            if game.Players.LocalPlayer.Character ~= nil then
+                for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                        v.CanCollide = false
+                    end
+                end
+            end
+            wait(0.21)
+        end)
+        if game.Players.LocalPlayer.Character ~= nil then
+            game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+                if noclip then
+                    noclip:Disconnect()
+                end
+            end)
+        end
     else
-        noclip.Off()
+        if noclip then
+            noclip:Disconnect()
+        end
     end
 end)
