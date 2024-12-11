@@ -249,3 +249,57 @@ PlayerSection:CreateToggle("noclip", function(state)
         end
     end
 end)
+
+local isJumpPower = false
+local isWalkSpeed = false
+local JumpPowerValue = 10
+local WalkSpeedValue = 16
+
+PlayerSection:CreateButton("JumpPower (+)", function()
+    isJumpPower = true
+    JumpPowerValue = JumpPowerValue + 20
+    if JumpPowerValue > 350 then
+        JumpPowerValue = 350
+    end
+    alert("JumpPower: " .. JumpPowerValue)
+end)
+
+PlayerSection:CreateButton("JumpPower (-)", function()
+    isJumpPower = true
+    JumpPowerValue = JumpPowerValue - 20
+    if JumpPowerValue < 10 then
+        JumpPowerValue = 10
+    end
+    alert("JumpPower: " .. JumpPowerValue)
+end)
+
+PlayerSection:CreateButton("WalkSpeed (+)", function()
+    isWalkSpeed = true
+    WalkSpeedValue = WalkSpeedValue + 20
+    if WalkSpeedValue > 200 then
+        WalkSpeedValue = 100
+    end
+    alert("WalkSpeed: " .. WalkSpeedValue)
+end)
+
+PlayerSection:CreateButton("WalkSpeed (-)", function()
+    isWalkSpeed = true
+    WalkSpeedValue = WalkSpeedValue - 20
+    if WalkSpeedValue < 16 then
+        WalkSpeedValue = 16
+    end
+    alert("WalkSpeed: " .. WalkSpeedValue)
+end)
+
+while wait() do
+    if game.Players.LocalPlayer.Character ~= nil then
+        if isJumpPower then
+            game.Players.LocalPlayer.Character.Humanoid.JumpHeight = JumpPowerValue
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = JumpPowerValue
+        end
+        if isWalkSpeed then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = WalkSpeedValue
+        end
+    end
+    wait(0.21)
+end
