@@ -1,0 +1,61 @@
+local SiBen = {}
+local cloneref = cloneref or function(o) return o end
+local runService = cloneref(game:GetService("RunService"))
+-- Cài đặt
+local runServiceFlying = nil
+local isFlying = false
+local speed = 0
+local bv, bg
+
+function SiBen.On()
+    if game.Players.LocalPlayer.Character ~= nil then
+        isFlying = true
+        local player = game.Players.LocalPlayer
+        local controlModule = require(player:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        local humanoid = character:WaitForChild("Humanoid")
+        humanoid.PlatformStand = true -- Đặt nhân vật vào chế độ bay
+        bv = Instance.new("BodyVelocity", rootPart)
+        bv.MaxForce = Vector3.new(100000, 100000, 100000)
+        bg = Instance.new("BodyGyro", rootPart)
+        bg.MaxTorque = Vector3.new(100000, 100000, 100000)
+        runServiceFlying = runService.RenderStepped:Connect(function()
+            if isFlying == true and game.Players.LocalPlayer.Character ~= nil then
+                camera = workspace.CurrentCamera
+    			bg.CFrame = workspace.CurrentCamera.CFrame
+                local direction = controlModule:GetMoveVector()
+                if direction.Magnitude > 0 then
+        			if direction.X > 0 then
+        				bv.Velocity = bv.Velocity + (camera.CFrame.RightVector * direction.X * 1)
+        			end
+        			if direction.X < 0 then
+        				bv.Velocity = bv.Velocity + (camera.CFrame.RightVector * direction.X * 1)
+        			end
+        			if direction.Z > 0 then
+        				bv.Velocity = bv.Velocity - (camera.CFrame.LookVector * direction.Z * 1)
+        			end
+        			if direction.Z < 0 then
+        				bv.Velocity = bv.Velocity - (camera.CFrame.LookVector * direction.Z * 1)
+        			end
+                else
+                    bv.Velocity = camera.CFrame.LookVector * 0
+                end
+            else
+                humanoid.PlatformStand = false
+                if bv and bg then
+                    bv:Destroy()
+                    bg:Destroy()
+                end
+                if runServiceFlying then runServiceFlying:Disconnect() end
+                isFlying = false
+            end
+        end)
+    end
+end
+
+function SiBen.Off()
+    isFlying = false
+end
+
+return SiBen

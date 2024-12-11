@@ -1,0 +1,33 @@
+local SiBen = {}
+local cloneref = cloneref or function(o) return o end
+local runService = cloneref(game:GetService("RunService"))
+-- Cài đặt
+local runServiceNoclip = nil
+
+function SiBen.On()
+    runServiceNoclip = runService.Stepped:Connect(function()
+        if game.Players.LocalPlayer.Character ~= nil then
+            for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                    v.CanCollide = false
+                end
+            end
+        end
+        wait(0.21) -- basic optimization
+    end)
+    if game.Players.LocalPlayer.Character ~= nil then
+        game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+            if runServiceNoclip then
+                runServiceNoclip:Disconnect()
+            end
+        end)
+    end
+end
+
+function SiBen.Off()
+    if runServiceNoclip then
+        runServiceNoclip:Disconnect()
+    end
+end
+
+return SiBen
