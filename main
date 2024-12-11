@@ -89,19 +89,77 @@ UGCSection:CreateToggle("Auto Buy", function(state)
     end)
 end)
 
+UGCSection:CreateButton("Teleport Create", function()
+    local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    local o = string.format("%d, %d, %d", pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5)
+    setclipboard("game.Players.LocalPlayer.Character:PivotTo(CFrame.new(Vector3.new(".. o .. ")))")
+    alert("Copied! On your clipboard")
+end)
+
+UGCSection:CreateButton("Tween Create", function()
+    local po = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    local x, y, z = math.floor(po.X), math.floor(po.Y), math.floor(po.Z)
+    local twn = string.format([[
+        local tweenInfo = TweenInfo.new(2)
+        local goal = {CFrame = CFrame.new(%d, %d, %d)}
+        local tween = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.HumanoidRootPart, tweenInfo, goal)
+        tween:Play()
+    ]], x, y, z)
+    setclipboard(twn)
+    alert("Copied! On your clipboard")
+end)
+
+UGCSection:CreateButton("Hide Player", function()
+    while true do
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Character then
+                player.Character:Destroy()
+            end
+        end
+        wait(5)
+    end
+end)
+
 --[[ Firing Section ]]--
 local FiringSection = Window:NewSection("Firing")
 
 FiringSection:CreateButton("Touchinterests", function()
-
+    spawn(function()
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("TouchTransmitter") and
+                    game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.PrimaryPart then
+                task.spawn(function()
+                    firetouchinterest(descendant:FindFirstAncestorWhichIsA("Part"),
+                        game.Players.LocalPlayer.Character.PrimaryPart, 1)
+                    task.wait()
+                    firetouchinterest(descendant:FindFirstAncestorWhichIsA("Part"),
+                        game.Players.LocalPlayer.Character.PrimaryPart, 0)
+                end)
+            end
+        end
+    end)
 end)
 
 FiringSection:CreateButton("Clickedetector", function()
-
+    spawn(function()
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("ClickDetector") then
+                task.spawn(function()
+                    fireclickdetector(descendant)
+                end)
+            end
+        end
+    end) 
 end)
 
 FiringSection:CreateButton("ProximityPrompt", function()
-
+    spawn(function()
+        for _, pro in ipairs(workspace:GetDescendants()) do
+            if pro:IsA("ProximityPrompt") then
+               fireproximityprompt(pro)
+            end
+        end
+    end) 
 end)
 
 --[[ Player Section ]]--
