@@ -38,7 +38,7 @@ ScriptSection:CreateDropdown("Select", {
     selected = text
 end)
 
-OtherSection:CreateButton("Excute", function()
+ScriptSection:CreateButton("Excute", function()
     if selected == "fix_lag" then
         loadscript("https://raw.githubusercontent.com/sibenvn/script/" .. hash .. "/siben")
     elseif selected == "get_pos" then
