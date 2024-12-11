@@ -301,5 +301,5 @@ while wait() do
             game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = WalkSpeedValue
         end
     end
-    wait(0.21)
+    wait(0.20)
 end
