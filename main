@@ -3,6 +3,9 @@ local Gui = loadstring(game:HttpGet(("https://raw.githubusercontent.com/sibenvn/
 local Window = Gui:NewWindow("👾 MENU SIBEN 👾")
 local isLoading = false
 
+--[[ Defined ]]--
+local StarterGui = cloneref(game:GetService("StarterGui"))
+
 --[[ Notification ]]--
 local function alert(t) StarterGui:SetCore("SendNotification", { Title = "Thông báo", Text = t, Duration = 2 }) end
 
@@ -31,9 +34,9 @@ ScriptSection:CreateButton("Console", function()
 end)
 
 ScriptSection:CreateDropdown("Select", {
-    "heartland",
+    "get_pos",
     "fix_lag",
-    "get_pos"
+    "test"
 }, 2, function(text)
     selected = text
 end)
