@@ -12,7 +12,7 @@ local function alert(text)
     })
 end
 
-section:CreateTextbox("%s", function(text)
+section:CreateTextbox("{{hash}}", function(text)
     print(text)
 end)
 
