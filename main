@@ -6,7 +6,7 @@ local cloneref = cloneref or function(o) return o end
 --[[ Defined ]]--
 local RunService = cloneref(game:GetService("RunService"))
 local StarterGui = cloneref(game:GetService("StarterGui"))
-local VirtualInputManager = cloneref(VirtualInputManager)
+local VirtualInputManager = cloneref(game:GetService("VirtualInputManager"))
 
 --[[ Notification ]]--
 local function alert(t) StarterGui:SetCore("SendNotification", { Title = "Thông báo", Text = t, Duration = 2 }) end
