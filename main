@@ -29,14 +29,14 @@ function loadscript(url)
     end
 end
 
-ScriptSection:CreateButton("Console", function()
-    StarterGui:SetCore("DevConsoleVisible", true)
-end)
-
 ScriptSection:CreateDropdown("Select", {
     "get_pos",
-    "fix_lag",
-    "test"
+    "menu",
+    "test",
+    "get_pos1",
+    "get_pos2",
+    "get_pos3",
+    "get_pos4"
 }, 2, function(text)
     selected = text
 end)
